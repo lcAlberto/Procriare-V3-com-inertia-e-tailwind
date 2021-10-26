@@ -27,7 +27,8 @@
                             </li>
 
                             <li @click="toggleUsersDropdown"
-                                class="text-center cursor-pointer px-9 py-2 rounded-md border border-transparent hover:border-white mx-1">
+                                class="text-center cursor-pointer px-9 py-2 border border-transparent hover:border-white mx-1"
+                            :class="showUsersDropdown ? 'bg-white text-indigo-500 rounded-t-md' : 'bg-transparent text-white rounded-md'">
                                 <a class="w-11/12">
                                     <i class="fas fa-users"></i> Usuários
                                 </a>
@@ -163,7 +164,12 @@
                                     </template>
 
                                     <template #content>
+                                        <BreezeDropdownLink :href="route('my-profile')" as="button">
+                                            <i class="fas fa-user-circle"></i>
+                                            Meu perfil
+                                        </BreezeDropdownLink>
                                         <BreezeDropdownLink :href="route('logout')" method="post" as="button">
+                                            <i class="fas fa-door-open"></i>
                                             Log Out
                                         </BreezeDropdownLink>
                                     </template>
