@@ -1,6 +1,6 @@
 <template>
-    <div class="flex">
-        <aside class="fixed max-w-xs w-1/6">
+    <div class="flex gap-0 spacing-0">
+        <aside class="fixed max-w-xs w-20">
             <div
                 class="absolute flex top-0 h-screen z-0"
                 :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
@@ -114,7 +114,7 @@
             </transition>
         </aside>
 
-        <div :class="dimmer && open ? 'w-10/12 ml-auto' : 'w-full'">
+        <div :class="dimmer && open ? 'md:w-90 ml-auto' : 'w-full'" class="bg-gray-200">
 
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
