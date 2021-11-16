@@ -1,6 +1,6 @@
 <template>
-    <div class="flex">
-        <aside class="fixed max-w-xs w-1/6">
+    <div class="flex gap-0 spacing-0">
+        <aside class="fixed max-w-xs w-20">
             <div
                 class="absolute flex top-0 h-screen z-0"
                 :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
@@ -20,7 +20,8 @@
                                 </a>
                             </li>
 
-                            <li class="text-center cursor-pointer px-9 py-2 rounded-md border border-transparent hover:border-white mx-1">
+                            <li v-if="can('farms index')"
+                                class="text-center cursor-pointer px-9 py-2 rounded-md border border-transparent hover:border-white mx-1">
                                 <a class="w-11/12">
                                     <i class="fas fa-hat-cowboy-side"></i> Fazendas
                                 </a>
@@ -114,7 +115,7 @@
             </transition>
         </aside>
 
-        <div :class="dimmer && open ? 'w-10/12 ml-auto' : 'w-full'">
+        <div :class="dimmer && open ? 'md:w-90 ml-auto' : 'w-full'" class="bg-gray-200">
 
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -130,7 +131,16 @@
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <BreezeNavLink :href="route('admin.dashboard')" :active="route().current('admin.dashboard')">
+                                <BreezeNavLink v-if="role === 'root'" :href="route('root.dashboard')"
+                                               :active="route().current('root.dashboard')">
+                                    Dashboard
+                                </BreezeNavLink>
+                                <BreezeNavLink v-if="role === 'admin'" :href="route('admin.dashboard')"
+                                               :active="route().current('admin.dashboard')">
+                                    Dashboard
+                                </BreezeNavLink>
+                                <BreezeNavLink v-if="role === 'client'" :href="route('client.dashboard')"
+                                               :active="route().current('client.dashboard')">
                                     Dashboard
                                 </BreezeNavLink>
                             </div>
@@ -253,6 +263,18 @@ export default {
         Link,
     },
 
+    props: {
+        // user: Object,
+        // permissions: Array,
+        // role: String,
+    },
+
+    computed: {
+        role() {
+            return this.$page.props.auth.role;
+        }
+    },
+
     data() {
         return {
             showingNavigationDropdown: false,
@@ -269,7 +291,11 @@ export default {
         },
         toggleUsersDropdown() {
             this.showUsersDropdown = !this.showUsersDropdown;
-        }
+        },
+
+        can(permission) {
+            return this.$page.props.auth.permissions.includes(permission);
+        },
     }
 }
 </script>
