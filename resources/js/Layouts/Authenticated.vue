@@ -1,6 +1,6 @@
 <template>
     <div class="flex gap-0 spacing-0">
-        <aside class="fixed max-w-xs w-20">
+        <aside class="fixed max-w-xs w-1/3">
             <div
                 class="absolute flex top-0 h-screen z-0"
                 :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
@@ -115,7 +115,7 @@
             </transition>
         </aside>
 
-        <div :class="dimmer && open ? 'md:w-90 ml-auto' : 'w-full'" class="bg-gray-200">
+        <div :class="dimmer && open ? 'md:w-88 ml-auto' : 'w-full'" class="bg-gray-300">
 
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -233,8 +233,8 @@
 
             <main>
                 <div class="mt-3 h-full">
-                    <header class="bg-white w-full h-16 shadow" v-if="$slots.header">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <header class="bg-transparent w-full h-16" v-if="$slots.header">
+                        <div class="w-11/12 mt-60 mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             <slot name="header"/>
                         </div>
                     </header>

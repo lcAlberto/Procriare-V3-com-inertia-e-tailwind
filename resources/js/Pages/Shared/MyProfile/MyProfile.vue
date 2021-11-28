@@ -21,9 +21,14 @@
             </breadcrumb>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="pb-12">
+            <div class="flex gap-4 w-11/12 xl:max-w-full mx-auto sm:px-6 lg:px-5">
+                <div class="bg-white w-3/4 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white border-b border-gray-200">
+                        Perfil do Admin
+                    </div>
+                </div>
+                <div class="bg-white w-1/4 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         Perfil do Admin
                     </div>
