@@ -1,12 +1,15 @@
 <template>
-    <div class="flex gap-0 spacing-0">
-        <aside class="fixed max-w-xs w-1/3">
+    <div class="flex flex-col bg-gray-300 gap-0 spacing-0">
+        <div
+        style="background-image: url('https://images.pexels.com/photos/422218/pexels-photo-422218.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'); background-size: 100% background-position:center"
+        class="fixed w-full h-screen"></div>
+        <aside class="fixed md:w-20">
             <div
                 class="absolute flex top-0 h-screen z-0"
                 :class="[right ? 'right-0 flex-row' : 'left-0 flex-row-reverse']">
                 <div
                     ref="content"
-                    class="transition-all duration-700 bg-indigo-500 overflow-y-auto flex justify-center"
+                    class="transition-all duration-700 bg-indigo-700 opacity-70 overflow-y-auto flex justify-center"
                     :class="[open ? 'max-w-sm' : 'max-w-0']">
                     <div class="text-white">
                         <ul class="h-full flex flex-col p-3 overflow-auto">
@@ -115,9 +118,11 @@
             </transition>
         </aside>
 
-        <div :class="dimmer && open ? 'md:w-88 ml-auto' : 'w-full'" class="bg-gray-300">
+        <div :class="dimmer && open ? 'w-85 ml-auto' : 'w-full'" class="bg-transparent h-screen">
 
-            <nav class="bg-white border-b border-gray-100">
+            <nav
+                class="sticky top-0 top-nav"
+                :class="dimmer && open ? 'bg-transparent text-gray-700' : 'bg-gray-900 opacity-70 text-white rounded-b-lg'">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-10">
@@ -160,8 +165,9 @@
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button"
-                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.name }}
+                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-transparent hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                                    {{ $page.props.auth.user.name }}
+                                                <img src="https://thispersondoesnotexist.com/image" alt="imagem de perfil pequena" width="50" height="50" class="p-2 rounded-full" >
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                                      viewBox="0 0 20 20" fill="currentColor">
@@ -231,9 +237,23 @@
                 </div>
             </nav>
 
-            <main>
-                <div class="mt-3 h-full">
-                    <header class="bg-transparent w-full h-16" v-if="$slots.header">
+            <main class="px-20">
+
+                <div
+                v-if="route().current('my-profile')"
+                class="mt-3 bg-gray-900 rounded-lg opacity-95">
+                    <header class="bg-gray-900 w-full h-16 rounded-xl" v-if="$slots.header" >
+                        <div class="w-11/12 mt-60 mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            <slot name="header"/>
+                        </div>
+                    </header>
+                    <slot/>
+                </div>
+
+                <div
+                v-else
+                class="mt-3 bg-gray-200 rounded-xl opacity-95">
+                    <header class="bg-transparent w-full h-16" v-if="$slots.header" >
                         <div class="w-11/12 mt-60 mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             <slot name="header"/>
                         </div>
@@ -296,6 +316,14 @@ export default {
         can(permission) {
             return this.$page.props.auth.permissions.includes(permission);
         },
+        fixedBreacrumb(event) {
+            console.log(event)
+        }
     }
 }
 </script>
+<style scoped>
+.top-nav {
+    z-index: 100 !important;
+}
+</style>
