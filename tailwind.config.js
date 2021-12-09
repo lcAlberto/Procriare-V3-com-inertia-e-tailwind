@@ -9,6 +9,10 @@ module.exports = {
     ],
 
     theme: {
+        backgroundColor: theme => ({
+            ...theme('colors'),
+            'white-semitransparent': '#fff'
+        }),
         extend: {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
@@ -21,6 +25,8 @@ module.exports = {
                 '5/7': '71.4285714%',
                 '6/7': '85.7142857%',
                 '90': '90%',
+                '88': '88%',
+                '85':'85%',
                 '80': '80%',
                 '70': '70%',
                 '60': '60%',

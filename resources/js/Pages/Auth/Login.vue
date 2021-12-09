@@ -8,12 +8,12 @@
     </div>
 
     <form @submit.prevent="submit">
-        <div>
+        <div class="text-black">
             <BreezeLabel for="email" value="Email" />
             <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 text-black">
             <BreezeLabel for="password" value="Password" />
             <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
         </div>
