@@ -3,7 +3,7 @@
 
   <BreezeAuthenticatedLayout>
     <template #header class="">
-      <breadcrumb header="home" icon="fas fa-home">
+      <breadcrumb header="home" icon="fas fa-home" custom-text-color="text-white">
         <template slot="breadcrumb-item">
           <breadcrumb-item href="/home">
             <span class="text-white">

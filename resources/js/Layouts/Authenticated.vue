@@ -241,9 +241,9 @@
 
                 <div
                 v-if="route().current('my-profile')"
-                class="mt-3 bg-gray-900 rounded-lg opacity-95">
-                    <header class="bg-gray-900 w-full h-16 rounded-xl" v-if="$slots.header" >
-                        <div class="w-11/12 mt-60 mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                class="mt-3 rounded-lg opacity-95">
+                    <header class="text-white h-16 rounded-xl" v-if="$slots.header" >
+                        <div class="w-full text-white mt-60 mx-5 py-6 px-4 sm:px-6 lg:px-8">
                             <slot name="header"/>
                         </div>
                     </header>
