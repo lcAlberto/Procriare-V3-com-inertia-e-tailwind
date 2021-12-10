@@ -1,3 +1,20 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer components {
+    .btn-default {
+        @apply py-2 px-4 bg-transparent text-gray-600 font-semibold rounded-lg shadow-md hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-opacity-75;
+    }
+    .btn-primary {
+        @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+    }
+    .input-text {
+        @apply py-2 px-1 w-full rounded-md shadow-md border border-indigo-200 focus:border-indigo-500 hover:border-indigo-700 focus:ring-0 outline-none;
+    }
+
+    /*TITLE*/
+    h1 {
+        @apply text-2xl text-indigo-500 font-bold
+    }
+}
