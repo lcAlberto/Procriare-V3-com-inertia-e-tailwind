@@ -94,12 +94,55 @@ export default {
                 name: '',
                 owner: '',
                 postal_code: '',
-                city_id: '',
+                city: [],
                 state_id: ''
-            }
+            },
+            city: [
+                {id: 1, name: 'Guarapuava',state_id: 1},
+                {id: 2, name: 'Inácio Martins',state_id: 1},
+                {id: 3, name: 'Inácio Martins',state_id: 1},
+                {id: 4, name: 'Inácio Martins',state_id: 1},
+                {id: 5, name: 'Inácio Martins',state_id: 1},
+            ],
+            states: []
         }
     },
     methods: {
+        async getStates() {
+            try {
+                const response = await this.$root.$axios.$get('/get-states', {
+                    // params: {
+                    //     states: this.$route.params.cnj
+                    // }
+                })
+                console.log(response);
+                // this.states = response
+            } catch (error) {
+                this.$alert.open(error.response ? error.response.data.mensagem : 'Houve um erro de sistema. Aguarde e tente novamente ou entre em contato', 'error')
+            }
+        },
+
+        /*
+        *  async autoLogin ({ commit, dispatch }) {
+    const tokens = {
+      access_token: VueCookies.get('access_token'),
+      refresh_token: VueCookies.get('refresh_token')
+    }
+    if (tokens.access_token && !['undefined', 'null'].includes(tokens.access_token)) {
+      commit('updateTokens', {
+        tokens,
+        keepLogin: true
+      })
+      this.commit('auth/SET', { key: 'user', value: {} })
+      try {
+        await dispatch('tryLogin', { autoRedirect: false })
+      } catch (error) {
+        this.$router.push({ name: 'index', hash: '' })
+      }
+    } else {
+      commit('logOut')
+    }
+  },*/
         submitPersonal() {
             console.log('submete')
         }
