@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 
 class AdressController extends Controller
 {
-    public function getStates()
+    public function getStates(): \Illuminate\Support\Collection
     {
-        $states = State::all();
-        dd($states);
-        return $states;
+        return State::query()
+            ->select('name as label', 'id as code')
+            ->pluck('label', 'code');
+    }
+
+    public function getCities(State $state): \Illuminate\Support\Collection
+    {
+        return collect($state->cities)
+            ->pluck('name', 'id');
+
     }
 }

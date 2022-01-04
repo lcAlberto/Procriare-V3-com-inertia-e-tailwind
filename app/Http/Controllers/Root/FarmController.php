@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Root;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FarmRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,6 +26,11 @@ class FarmController extends Controller
     {
         $user = auth()->user();
         return Inertia::render('Root/Farms/create', $user);
+    }
+
+    public function store(FarmRequest $request)
+    {
+        $data = $request->validated();
     }
 
     public function edit($id)
