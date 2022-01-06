@@ -20,8 +20,8 @@
                 <div class="bg-white h-auto shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <div><h1>Nva fazenda</h1>
-                                <p> kjflkdsjfkl jlk hdfh dlkshldsf</p>
+                            <div><h1>Nova fazenda</h1>
+                                <p>Criar uma fazenda manualmente</p>
                             </div>
                             <a :href="route('root.farms.index')" class="btn-primary">
                                 <i class="fa fa-arrow-left mr-2"></i>
@@ -39,7 +39,18 @@
                                         </div>
                                         <div class="mb-2">
                                             <label for="owner" class="text-gray-600">Owner:</label>
-                                            <input id="owner" name="owner" class="input-text" v-model="formData.owner"/>
+                                            <Multiselect
+                                                required
+                                                searchable
+                                                mode="single"
+                                                :disabled="loading"
+                                                noOptionsText="Nenhum proprietário encontrado"
+                                                noResultsText="Nenhum dado encontrado"
+                                                name="state"
+                                                :loading="loading"
+                                                v-model="formData.owner"
+                                                :options="owners"
+                                            />
                                         </div>
                                     </div>
                                     <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 justify-center p-2">
@@ -109,7 +120,7 @@ import Breadcrumb from "@/Components/Breadcrumb/Breadcrumb";
 import BreadcrumbItem from "@/Components/Breadcrumb/BreadcrumbItem";
 import Multiselect from '@vueform/multiselect';
 import {brStates} from "@/constants";
-import { VueMaskDirective } from 'v-mask'
+import {VueMaskDirective} from 'v-mask'
 
 export default {
     name: "create",
@@ -123,6 +134,7 @@ export default {
     directives: {'mask': VueMaskDirective},
     created() {
         this.getStates()
+        this.getOwnersUsers()
     },
     data() {
         return {
@@ -137,6 +149,7 @@ export default {
             selectedState: [],
             cities: {},
             selectedCity: '',
+            owners : [],
             loading: false,
             mask: '#####-###'
         }
@@ -217,10 +230,26 @@ export default {
             // this.formData.city = this.selectedCity;
             try {
                 this.formData.post(this.route('root.farms.store'), {
-                    onFinish: () => {}
+                    onFinish: () => {
+                    }
                 })
             } catch (error) {
                 console.log(error);
+            }
+        },
+        async getOwnersUsers() {
+            this.loading = true
+            try {
+                const response = await axios.get('/ajax/get-users')
+                    .then(response => (
+                        this.owners = response.data
+                    ))
+                    .finally(
+                        this.loading = false
+                    )
+            } catch (error) {
+                this.$alert.open(error.response ? error.response.data.mensagem : 'Não foi possível carregar proprietários', 'error')
+                this.loading = false
             }
         }
     },

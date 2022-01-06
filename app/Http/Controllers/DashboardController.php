@@ -16,7 +16,6 @@ class DashboardController extends Controller
 
         foreach ($profiles as $profile => $permissions) {
             $rolePermissions = PermissionsHelper::getFlattenPermissions($permissions);
-//            dd($rolePermissions);
         }
         return Inertia::render('Dashboard');
     }

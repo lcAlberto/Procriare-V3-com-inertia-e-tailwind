@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Root;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FarmRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -36,5 +37,15 @@ class FarmController extends Controller
     public function edit($id)
     {
 
+    }
+
+    public function getUsers()
+    {
+        return auth()->user()->can('users create') ?
+             User::query()
+                ->where('is_owner', true)
+                ->select('name as label', 'id as code')
+                ->pluck('label', 'code')
+        : [];   
     }
 }
