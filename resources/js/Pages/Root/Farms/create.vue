@@ -31,11 +31,12 @@
                         <div class="lg:mt-5 flex flex-col gap-4 w-full">
                             <fieldset class="border border-gray-300 rounded-md p-5">
                                 <legend class="text-gray-500 px-5">Identificação</legend>
-                                <form @submit.prevent="submitPersonal()" class="flex flex-col justify-center">
+                                <form @submit.prevent="handleSubmit()" class="flex flex-col justify-center">
                                     <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-4 justify-center p-2">
                                         <div class="mb-2">
                                             <label for="name" class="text-gray-600">Name:</label>
                                             <input id="name" name="name" class="input-text" v-model="formData.name"/>
+                                            <div class="text-sm text-red-500" v-if="errors.name">{{ errors.name }}</div>
                                         </div>
                                         <div class="mb-2">
                                             <label for="owner" class="text-gray-600">Owner:</label>
@@ -51,6 +52,10 @@
                                                 v-model="formData.owner"
                                                 :options="owners"
                                             />
+                                            <div class="text-sm text-red-500" v-if="errors.owner">{{
+                                                    errors.owner
+                                                }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 justify-center p-2">
@@ -65,6 +70,9 @@
                                                 class="input-text"
                                                 @blur="getPostalCode()"
                                                 v-model="formData.postal_code"/>
+                                            <div class="text-sm text-red-500" v-if="errors.postal_code">
+                                                {{ errors.postal_code }}
+                                            </div>
                                         </div>
                                         <div class="mb-2">
                                             <label for="state" class="text-gray-600">Estado:</label>
@@ -77,24 +85,39 @@
                                                 noResultsText="Nenhum estado encontrado"
                                                 name="state"
                                                 :loading="loading"
-                                                v-model="formData.state"
+                                                v-model="selectedState"
                                                 :options="states"
                                             />
+                                            <div class="text-sm text-red-500" v-if="errors.postal_code">
+                                                {{ errors.state_id }}
+                                            </div>
                                         </div>
                                         <div class="mb-2">
                                             <label for="owner"
-                                                   class="text-gray-600">Cidade:{{ formData.city_id }}</label>
-                                            <Multiselect
-                                                required
-                                                searchable
-                                                mode="single"
-                                                :disabled="loading"
-                                                noOptionsText="Nenhuma cidade encontrada"
-                                                noResultsText="Nenhuma cidade encontrada"
-                                                :loading="loading"
-                                                v-model="selectedCity"
-                                                :options="cities"
-                                            />
+                                                   class="text-gray-600">Cidade:</label>
+                                            <div class="flex">
+                                                <Multiselect
+                                                    required
+                                                    searchable
+                                                    mode="single"
+                                                    :disabled="loading"
+                                                    noOptionsText="Nenhuma cidade encontrada"
+                                                    noResultsText="Nenhuma cidade encontrada"
+                                                    :loading="loading"
+                                                    v-model="selectedCity"
+                                                    :options="cities"
+                                                />
+                                                <a
+                                                    v-if="selectedState"
+                                                    @click="getCities"
+                                                    title="Recarregar cidades"
+                                                    class="mx-2 p-2 rounded-full bg-transparent shadow-lg hover:text-indigo-500">
+                                                    <i class="fa fa-undo"></i>
+                                                </a>
+                                            </div>
+                                            <div class="text-sm text-red-500" v-if="errors.postal_code">
+                                                {{ errors.city_id }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="mt-auto mx-auto w-1/5">
@@ -136,37 +159,54 @@ export default {
         this.getStates()
         this.getOwnersUsers()
     },
+    props: {
+        errors: Object,
+    },
     data() {
         return {
             formData: this.$inertia.form({
                 name: '',
                 owner: '',
                 postal_code: '',
-                city: {},
-                state: {},
+                city_id: {},
+                state_id: {},
             }),
             states: {},
             selectedState: [],
             cities: {},
-            selectedCity: '',
-            owners : [],
+            selectedCity: [],
+            owners: [],
             loading: false,
             mask: '#####-###'
         }
     },
     watch: {
         selectedState(value) {
-            if (!this.formData.postal_code) {
-                this.formData.state_id = value
-                this.getCities()
-            }
+            // if (!this.formData.postal_code) {
+            this.formData.state_id = value
+            this.getCities()
+            // }
         },
         selectedCity(value) {
-            console.log('city: ' + value);
             this.formData.city_id = value
         }
     },
     methods: {
+        async getOwnersUsers() {
+            this.loading = true
+            try {
+                const response = await axios.get('/ajax/get-users')
+                    .then(response => (
+                        this.owners = response.data
+                    ))
+                    .finally(
+                        this.loading = false
+                    )
+            } catch (error) {
+                this.$alert.open(error.response ? error.response.data.mensagem : 'Não foi possível carregar proprietários', 'error')
+                this.loading = false
+            }
+        },
         async getStates() {
             this.loading = true
             try {
@@ -184,7 +224,6 @@ export default {
         },
         async getCities() {
             this.loading = true
-            console.log('aki');
             try {
                 const response = await axios.get('/ajax/get-cities/' + this.selectedState)
                     .then(response => (
@@ -199,19 +238,24 @@ export default {
             }
         },
         getPostalCode() {
-            if (this.formData.postal_code.length >= 8) {
-                this.loading = true
-                axios.get(`https://viacep.com.br/ws/${this.formData.postal_code}/json/`)
-                    .then((response) => {
-                        if (response.status === 200) {
-                            this.formData.postal_code = response.data.cep
-                            // this.getStateAbbr(response.data.uf)
-                            // this.formData.city_id = response.data.ibge
-                            this.loading = false
-                        }
-                    }).catch((error) => {
-                    alert('CEP não encontrado!')
-                })
+            try {
+                if (this.formData.postal_code.length >= 8) {
+                    this.loading = true
+                    axios.get(`https://viacep.com.br/ws/${this.formData.postal_code}/json/`)
+                        .then((response) => {
+                            if (response.status === 200) {
+                                this.formData.postal_code = response.data.cep
+                                // this.getStateAbbr(response.data.uf)
+                                // this.formData.city_id = response.data.ibge
+                                this.loading = false
+                            }
+                        }).catch((error) => {
+                        alert('CEP não encontrado!')
+                    })
+                }
+            } catch (error) {
+                this.$alert.open(error.response ? error.response.data.mensagem : 'Não foi possível encontrar o cep', 'error')
+                this.loading = false
             }
         },
         getStateAbbr(uf) {
@@ -224,34 +268,21 @@ export default {
         getCityName(cityName) {
             //
         },
-        submitPersonal() {
+        handleSubmit() {
             this.loading = true;
-            // this.formData.state = this.selectedState;
-            // this.formData.city = this.selectedCity;
+            this.formData.state_id = this.selectedState;
+            this.formData.city_id = this.selectedCity;
             try {
                 this.formData.post(this.route('root.farms.store'), {
                     onFinish: () => {
+                        this.loading = false
                     }
                 })
             } catch (error) {
-                console.log(error);
-            }
-        },
-        async getOwnersUsers() {
-            this.loading = true
-            try {
-                const response = await axios.get('/ajax/get-users')
-                    .then(response => (
-                        this.owners = response.data
-                    ))
-                    .finally(
-                        this.loading = false
-                    )
-            } catch (error) {
-                this.$alert.open(error.response ? error.response.data.mensagem : 'Não foi possível carregar proprietários', 'error')
+                this.$alert.open(error.response ? error.response.data.mensagem : 'Não foi possível criar a fazenda', 'error')
                 this.loading = false
             }
-        }
+        },
     },
 }
 </script>
